@@ -13,6 +13,8 @@ public:
 	void addFront(int new_data);
 	void addBack(int new_data);
 	void addElement(int new_data, int position);
+	int get(int position);
+	void printElement(int position);
 	void removeElement(int position);
 	void removeFront();
 	void removeBack();

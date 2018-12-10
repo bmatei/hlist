@@ -129,11 +129,18 @@ void HList::addFront(int new_data) {
 
 void HList::addBack(int new_data) {
 
-	Node *new_node = new Node;
+	Node *new_node = new Node{0,NULL,NULL};
 	new_node -> data = new_data;
-	tail -> next = new_node;
-	new_node -> prev = tail;
-	tail = new_node;
+
+	if(tail != NULL) {
+		tail -> next = new_node;
+		new_node -> prev = tail;
+		tail = new_node;
+}
+	else {
+		head_ref = new_node;
+		tail = new_node;
+	}
 
 }
 
@@ -201,7 +208,7 @@ int HList::searchLastOccurence(int data) {
 
 void HList::moveElement(Node* data, int position) {
 
-if (position > n || position < 0) {
+	if (position > n || position < 0) {
 		std::cerr << "Position denied." << std::endl;
 		return;		
 	}
@@ -241,6 +248,25 @@ if (position > n || position < 0) {
 		
 	}
 	// std::cout << n << std::endl;
+}
+
+int HList::get(int position) {
+
+	Node* curent_ref = head_ref;
+
+	if(position == 0) {
+		return head_ref -> data;
+	}
+	else if(position == n) {
+		return tail -> data;
+	}
+	else {
+		for(; position > 0 ; position--) {
+
+					curent_ref = curent_ref -> next;
+			}
+		return curent_ref -> data;
+	}
 }
 
 /*
