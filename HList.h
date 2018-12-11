@@ -14,6 +14,7 @@ public:
 	void addBack(int new_data);
 	void addElement(int new_data, int position);
 	int get(int position);
+	Node* thru (int position); // To be renamed
 	void printElement(int position);
 	void removeElement(int position);
 	void removeFront();

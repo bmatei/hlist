@@ -53,11 +53,7 @@ void HList::addElement(int new_data, int position) {
 	}
 	else {
 
-		for(; position > 0 ; position--) {
-			//if (curent_ref -> next != NULL) {
-				curent_ref = curent_ref -> next;
-			//}
-		}
+		curent_ref = thru(position);
 		new_node -> next = curent_ref;
 		new_node -> prev = curent_ref -> prev;
 		curent_ref -> prev -> next = new_node;
@@ -66,7 +62,6 @@ void HList::addElement(int new_data, int position) {
 	}
 
 	n++;
-	std::cout << n << std::endl;
 }
 
 
@@ -74,13 +69,10 @@ HList::HList():		// THE default CONSTRUCTOR //
 	head_ref(NULL), tail(NULL), n(0)
 {
 
-	std::cout << "HList created." << std::endl;
-
 }
 
 HList::~HList() {   // THE DESTRUCTOR //
 
-	std::cout << "HList destroyed." << std::endl;
 	Node *curent_ref = head_ref;
 
 	while (curent_ref != NULL){
@@ -146,7 +138,10 @@ void HList::addBack(int new_data) {
 
 void HList::removeBack() {
 
-
+	if(tail == NULL) {
+		std::cerr << "Tail is NULL" << std::endl;
+		return;
+	}
 	Node *tail_del = tail;
 	tail = tail -> prev;
 	tail_del -> prev -> next = NULL;
@@ -156,10 +151,20 @@ void HList::removeBack() {
 
 void HList::removeFront() {
 
+	if(head_ref == NULL) {
+		std::cerr << "Head is NULL" << std::endl;
+		return;
+	}
+	else if(head_ref == tail) {
+		delete head_ref;
+		delete tail;
+	}
+	else {
 	Node *head_del;
 	head_ref = head_ref -> next;
 	head_del -> next -> prev = NULL;
 	delete head_del;
+	}
 }
 
 int HList::searchFirstOccurence(int data) {
@@ -168,8 +173,14 @@ int HList::searchFirstOccurence(int data) {
 	curent_ref = head_ref;
 	int curent_pos = 0;
 
-	for(; curent_ref -> data != data ; curent_pos++) {
+	if(curent_ref == NULL) {
+		std::cerr << "You can't do that while the list is empty." << std::endl;
+		return 0;
+	}
+
+	while(curent_ref -> data != data) {
 		curent_ref = curent_ref -> next;
+		curent_pos++;
 	}
 	if (curent_ref -> data == data) {
 
@@ -190,10 +201,16 @@ int HList::searchLastOccurence(int data) {
 	curent_ref = tail;
 	int curent_pos = n - 1;
 
-	for (; curent_ref -> data != data ; curent_pos--) {
-		curent_ref = curent_ref -> prev;
+	if(curent_ref == NULL) {
+		std::cerr << "You can't do that while the list is empty." << std::endl;
+		return 0;
 	}
-	if (curent_ref -> data == data) {
+
+	while(curent_ref -> data != data) {
+		curent_ref = curent_ref -> prev;
+		curent_pos--;
+	}
+	if (curent_ref && curent_ref -> data == data) {
 
 		std::cout << "Itemul " << data << " apare ultima data pe pozitia " << curent_pos << "." << std::endl;
 
@@ -201,7 +218,7 @@ int HList::searchLastOccurence(int data) {
 	}
 	else {
 
-		std::cout << "Itemul " << data << " nu a fost gasit in lista HList." << std::endl;
+		std::cerr << "Itemul " << data << " nu a fost gasit in lista HList." << std::endl;
 		return 0;
 	}
 }
@@ -211,6 +228,11 @@ void HList::moveElement(Node* data, int position) {
 	if (position > n || position < 0) {
 		std::cerr << "Position denied." << std::endl;
 		return;		
+	}
+
+	if (data == NULL) {
+		std::cerr << "Tried to break it, didnt ya ?" << std::endl;
+		return;
 	}
 
 	Node *curent_ref = head_ref;
@@ -235,11 +257,7 @@ void HList::moveElement(Node* data, int position) {
 	}
 	else {
 
-		for(; position > 0 ; position--) {
-			//if (curent_ref -> next != NULL) {
-				curent_ref = curent_ref -> next;
-			//}
-		}
+		thru(position) -> data;
 			
 		data -> next = curent_ref;
 		data -> prev = curent_ref -> prev;
@@ -261,12 +279,38 @@ int HList::get(int position) {
 		return tail -> data;
 	}
 	else {
-		for(; position > 0 ; position--) {
-
-					curent_ref = curent_ref -> next;
-			}
-		return curent_ref -> data;
+		return thru(position) -> data;
 	}
+}
+
+void HList::printElement(int position) {
+
+	Node* curent_ref = head_ref;
+	int number = position;
+
+	if(position == 0) {
+		std::cout << "Head data is : " << head_ref -> data << std::endl;
+	}
+	else if(position == n) {
+		std::cout << "Tail data is : " << tail -> data << std::endl;
+	}
+	else {
+
+		std::cout << "The data on" << number << " position is : " << thru(position) -> data << std::endl;
+	}
+}
+
+Node* HList::thru (int position) {
+
+	Node* curent_ref = head_ref;
+
+	for(; position > 0 ; position--) {
+
+		curent_ref = curent_ref -> next;
+
+			}
+	return curent_ref;
+
 }
 
 /*
